@@ -107,7 +107,6 @@ function calculatePayroll(){
   }
   else{
     pay.value = hours.value * selectCategory.value.value
-    total.value = pay.value 
   }
   total.value = pay.value + extras.value
   addRow()
