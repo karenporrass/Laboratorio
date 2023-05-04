@@ -43,13 +43,14 @@
                 </h5>
               </q-card-section>
               <div class="q-pa-md " >
+                <pre class="bg-red-7 text-white">{{ alert }}</pre>
                 <div>
                   <q-input class="q-mb-md"  filled type="text" v-model="name" label="Digite el nombre"></q-input>
                   <q-select  class="q-mb-md" filled v-model="selectCategory" :options="optionsCategory" label="Seleccione la categoria" />
-                  <q-input   filled type="number" v-model="hours" label="Digite las horas laboradas"></q-input>
+                  <q-input   filled type="number" v-model="hoursTotal" label="Digite las horas laboradas"></q-input>
                   <div>
                     <br />
-                    <q-btn  label="guardar" class="text-white bg-orange-8" @click="calculatePayroll()" />
+                    <q-btn  label="guardar" class="text-white bg-orange-8" @click="validateInfo()" />
                     <q-btn class="q-ml-md" label="cerrar" v-close-popup />
                   </div>
                 </div>
@@ -74,9 +75,12 @@ let optionsCategory = ref([
 
 let name = ref("")
 let hours = ref()
+let hoursTotal= ref()
 let extras = ref(0)
+let hoursExtras = ref(0)
 let pay = ref()
 let total = ref()
+let alert = ref()
 
 
 let pagination = ref({
@@ -85,8 +89,9 @@ let pagination = ref({
 let columns = ref([
   {name: 'name',label: 'NOMBRE',field: 'name',align: 'center'},
   {name: 'category',label: 'CATEGORIA',field: 'category',align: 'center'},
-  {name: 'hours',label: 'HORAS',align: 'center',field: row => row.hours,format: val => `${val}`,sortable: true},
-  { name: 'extras', align: 'center', label: 'EXTRAS', field: 'extras',align: 'center', sortable: true },
+  {name: 'hours',label: 'HORAS',align: 'center',field: row => row.hoursTotal,format: val => `${val}`,sortable: true},
+  {name: 'hoursExtras',label: 'HORAS EXTRAS',align: 'center',field: row => row.hoursExtras,format: val => `${val}`,sortable: true},
+  { name: 'extras', align: 'center', label: ' PAGO EXTRAS', field: 'extras',align: 'center', sortable: true },
   { name: 'pay', align: 'center', label: 'PAGO', field: 'pay',align: 'center', sortable: true },
   { name: 'total', align: 'center', label: 'TOTAL', field: 'total',align: 'center', sortable: true }
 ])
@@ -95,38 +100,63 @@ let rows = ref([])
 
 
 function calculatePayroll(){
-  console.log(hours.value);
-  if(hours.value > 40){
-    let hoursExtras = hours.value - 40
-    hours.value = hours.value - hoursExtras
-    extras.value = hoursExtras * (selectCategory.value.value*25/100)
-    pay.value = hours.value * selectCategory.value.value
-    console.log(pay.value);
-    console.log(extras.value);
-    
+    if(hoursTotal.value > 40){ //A
+      hoursExtras.value = hoursTotal.value - 40 //B
+      hours.value = hoursTotal.value - hoursExtras.value
+      extras.value = hoursExtras.value * (selectCategory.value.value*25/100) 
+      pay.value = hours.value * selectCategory.value.value 
+      console.log(pay.value);
+      console.log(extras.value);
+      
+    } 
+    else{
+      pay.value = hoursTotal.value * selectCategory.value.value //C
+    } // D
+    total.value = pay.value + extras.value // E
+    addRow()
+    cleanModal()
+  }
+
+
+function validateInfo(){
+  if(name.value == "" ){ //A
+    alert.value ="el nombre es invalido"//B
+  }
+  else if(selectCategory.value == null){ //C
+    alert.value ="no has seleccionado una categoria" //D
+  }
+  else if(hoursTotal.value <= 0 || hoursTotal.value == null){ // E
+    alert.value =" La horas ingresadas son invalidas" //F
   }
   else{
-    pay.value = hours.value * selectCategory.value.value
-  }
-  total.value = pay.value + extras.value
-  addRow()
-    
+    alert.value = "se ha registrado correctamente la nomina" //G
+    calculatePayroll()
+  } 
 }
 
+
 function addRow(){
-  let newPayrrol= {
+  let newPayrrol= { //A
     name: name.value,
     category: selectCategory.value.label,
-    hours: hours.value,
+    hoursExtras: hoursExtras.value,
+    hoursTotal: hoursTotal.value,
     extras: extras.value,
     pay: pay.value,
     total: total.value
   }
-  rows.value.push(newPayrrol)
+  rows.value.push(newPayrrol) //B
 }
 
 
-
-
+function cleanModal(){
+  name.value = ""
+  selectCategory.value = null
+  hours.value = 0
+  hoursTotal.value = 0
+  extras.value = 0
+  pay.value = 0
+  total.value = 0
+}
 
 </script>
