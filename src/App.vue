@@ -43,7 +43,7 @@
                 </h5>
               </q-card-section>
               <div class="q-pa-md " >
-                <pre class="bg-red-7 text-white">{{ alert }}</pre>
+                <pre class="bg-red-7 text-white" v-if="alert !== ''">{{ alert }}</pre>
                 <div>
                   <q-input class="q-mb-md"  filled type="text" v-model="name" label="Digite el nombre"></q-input>
                   <q-select  class="q-mb-md" filled v-model="selectCategory" :options="optionsCategory" label="Seleccione la categoria" />
@@ -80,7 +80,7 @@ let extras = ref(0)
 let hoursExtras = ref(0)
 let pay = ref()
 let total = ref()
-let alert = ref()
+let alert = ref("")
 
 
 let pagination = ref({
@@ -103,7 +103,7 @@ function calculatePayroll(){
     if(hoursTotal.value > 40){ //A
       hoursExtras.value = hoursTotal.value - 40 //B
       hours.value = hoursTotal.value - hoursExtras.value
-      extras.value = hoursExtras.value * (selectCategory.value.value*25/100) 
+      extras.value = hoursExtras.value * (selectCategory.value.value*25/100 +(selectCategory.value.value)) 
       pay.value = hours.value * selectCategory.value.value 
       console.log(pay.value);
       console.log(extras.value);
@@ -155,8 +155,10 @@ function cleanModal(){
   hours.value = 0
   hoursTotal.value = 0
   extras.value = 0
+  hoursExtras.value = 0
   pay.value = 0
   total.value = 0
+  alert.value = ""
 }
 
 </script>
