@@ -119,24 +119,24 @@ function calculatePayroll(){
 
 
 function validateInfo(){
-  if(name.value == "" ){ //A
-    alert.value ="el nombre es invalido"//B
+  if(name.value == "" ){ 
+    alert.value ="el nombre es invalido"
   }
-  else if(selectCategory.value == null){ //C
-    alert.value ="no has seleccionado una categoria" //D
+  else if(selectCategory.value == null){ 
+    alert.value ="no has seleccionado una categoria" 
   }
-  else if(hoursTotal.value <= 0 || hoursTotal.value == null){ // E
-    alert.value =" La horas ingresadas son invalidas" //F
+  else if(hoursTotal.value <= 0 || hoursTotal.value == null){ 
+    alert.value =" La horas ingresadas son invalidas" 
   }
   else{
-    alert.value = "se ha registrado correctamente la nomina" //G
+    alert.value = "se ha registrado correctamente la nomina" 
     calculatePayroll()
   } 
 }
 
 
 function addRow(){
-  let newPayrrol= { //A
+  let newPayrrol= { 
     name: name.value,
     category: selectCategory.value.label,
     hoursExtras: hoursExtras.value,
@@ -145,7 +145,7 @@ function addRow(){
     pay: pay.value,
     total: total.value
   }
-  rows.value.push(newPayrrol) //B
+  rows.value.push(newPayrrol) 
 }
 
 
